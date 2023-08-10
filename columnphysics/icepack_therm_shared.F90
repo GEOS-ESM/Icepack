@@ -388,6 +388,9 @@
         elseif (trim(tfrz_option) == 'linear_salt') then
 
            Tf = -depressT * sss ! deg C
+#ifdef GEOSCOUPLED
+           if (sss < 4.0_dbl_kind) Tf = -depressT * 4.0_dbl_kind
+#endif
 
         else
 
