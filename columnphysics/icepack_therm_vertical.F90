@@ -1037,6 +1037,13 @@
 !               endif
 !         endif
 
+         if (ktherm == 1) then
+               if (zTin(k)>= Tmlts(k)) then
+                   zTin(k) = Tmlts(k) - puny
+                   zqin(k) = rhoi*cp_ocn*Tmlts(k)
+               endif
+         endif
+
       !-----------------------------------------------------------------
       ! initial energy per unit area of ice/snow, relative to 0 C
       !-----------------------------------------------------------------
@@ -2973,6 +2980,14 @@
 
             if (icepack_warnings_aborted(subname)) then
                write(warnstr,*) subname, ' ice: Vertical thermo error, cat ', n
+               call icepack_warnings_add(warnstr)
+               write(warnstr,*) subname, ' ice: Vertical thermo error, my_tsk ', my_tsk
+               call icepack_warnings_add(warnstr)
+               write(warnstr,*) subname, ' ice: Vertical thermo error, my_i ', my_i
+               call icepack_warnings_add(warnstr)
+               write(warnstr,*) subname, ' ice: Vertical thermo error, my_j ', my_j
+               call icepack_warnings_add(warnstr)
+               write(warnstr,*) subname, ' ice: Vertical thermo error, my_blk ', my_blk
                call icepack_warnings_add(warnstr)
                return
             endif

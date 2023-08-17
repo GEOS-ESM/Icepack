@@ -184,6 +184,9 @@
          dqmat       , & ! associated enthalpy difference
          Tmlts           ! melting temp, -depressT * salinity
 
+      real (kind=dbl_kind), dimension (nilyr) :: &
+         zqin0 
+
       real (kind=dbl_kind), dimension (nslyr) :: &
          Tsn_init    , & ! zTsn at beginning of time step
          Tsn_start   , & ! zTsn at start of iteration
@@ -253,6 +256,7 @@
       enddo                     ! k
 
       do k = 1, nilyr
+         zqin0 (k)    =  zqin(k)   ! beginning of time step
          Tin_init (k) =  zTin(k)   ! beginning of time step
          Tin_start(k) =  zTin(k)   ! beginning of iteration
          Tmlts    (k) = -zSin(k) * depressT
@@ -616,6 +620,7 @@
                   dTmat(k) = zTin(k) - Tmlts(k)
                   dqmat(k) = rhoi * dTmat(k) &
                            * (cp_ice - Lfresh * Tmlts(k)/zTin(k)**2)
+       !                    * (cp_ice - Lfresh * Tmlts(k)/(zTin(k)*Tin_init(k)))
 ! use this for the case that Tmlt changes by an amount dTmlt=Tmltnew-Tmlt(k)
 !                             + rhoi * dTmlt &
 !                             * (cp_ocn - cp_ice + Lfresh/zTin(k))
@@ -817,6 +822,22 @@
          write(warnstr,*) subname, 'zSin'
          call icepack_warnings_add(warnstr)
          write(warnstr,*) subname, (zSin(k),k=1,nilyr)
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, 'q initial:'
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, (zqin0(k),k=1,nilyr)
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, 'q final:'
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, (zqin(k),k=1,nilyr)
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, 'q final-initial:'
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, (zqin(k) - zqin0(k),k=1,nilyr)
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, 'q (final-initial)/dt:'
+         call icepack_warnings_add(warnstr)
+         write(warnstr,*) subname, ((zqin(k) - zqin0(k))*hilyr/dt,k=1,nilyr)
          call icepack_warnings_add(warnstr)
          call icepack_warnings_setabort(.true.,__FILE__,__LINE__)
          call icepack_warnings_add(subname//" temperature_changes: Thermo iteration does not converge" )
