@@ -24,8 +24,11 @@
 #ifdef GEOSCOUPLED
   use icepack_therm_shared, only: dfsurfdts_cpl,      & !
                                   dflatdts_cpl,       & !
+                                  flat_cpl0,          & !
+                                  fsurf_cpl0,         & !
                                   fsurf_cpl,          & !
                                   flat_cpl              !
+  use icepack_therm_shared, only: ismyturn
 #endif
 
   implicit none
@@ -872,6 +875,11 @@
     else
        ! initially melting
 
+#ifdef GEOSCOUPLED
+       fsurf_cpl = fsurf_cpl + dfsurfdts_cpl * (Tmlt - Tsf)
+       flat_cpl  = flat_cpl  + dflatdts_cpl  * (Tmlt - Tsf)
+#endif
+
        ! solve the system for melt and no snow
        Tsf = Tmlt
 
@@ -916,6 +924,11 @@
           ! assume surface is cold
           fcondtop1 = fcondtop
           fsurfn1   = fsurfn
+
+#ifdef GEOSCOUPLED
+          fsurf_cpl = fsurf_cpl0
+          flat_cpl  = flat_cpl0
+#endif
 
           ! reset the solution to initial values
           Tsf  = Tsf0
