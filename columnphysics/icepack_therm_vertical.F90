@@ -1010,8 +1010,6 @@
             call icepack_warnings_add(warnstr)
 
             if (ktherm == 2) then
-               write(warnstr,*) subname, 'tsk, i, j', local_tsk, local_i, local_j
-               call icepack_warnings_add(warnstr)
                zqin(k) = enthalpy_of_melting(zSin(k)) - c1
                zTin(k) = icepack_mushy_temperature_mush(zqin(k),zSin(k))
                write(warnstr,*) subname, 'Corrected quantities'
