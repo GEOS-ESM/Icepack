@@ -556,6 +556,7 @@
 
       end subroutine adjust_enthalpy
 
+#ifdef GEOSCOUPLED
       function ismyturn() result(ret)
 
          logical(kind=log_kind) :: ret
@@ -564,6 +565,7 @@
                 local_j == 53 .and. local_blk == 1)
 
       end function ismyturn
+#endif
 
 
 !=======================================================================
