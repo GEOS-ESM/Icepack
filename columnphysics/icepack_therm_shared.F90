@@ -36,7 +36,9 @@
                 icepack_liquidus_temperature, &
                 icepack_sea_freezing_temperature, &
                 icepack_enthalpy_snow, &
+#ifdef GEOSCOUPLED
                 ismyturn, &
+#endif
                 adjust_enthalpy
 
       real (kind=dbl_kind), parameter, public :: &
