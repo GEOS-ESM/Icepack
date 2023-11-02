@@ -28,6 +28,7 @@
       use icepack_therm_shared, only: dfsurfdts_cpl,      & !
                                       dflatdts_cpl,       & !
                                       fsurf_cpl,          & !
+                                      ismyturn,           & !   
                                       flat_cpl              !
 #endif
 
@@ -335,6 +336,9 @@
 
 #ifdef GEOSCOUPLED
       fsurfn = fsurfn + fswsfc ! this is the total heat flux 
+      if(ismyturn()) then
+         write(*,*), 'bl99, Tsf', Tsf
+      endif 
 #endif
 
       !-----------------------------------------------------------------
@@ -595,6 +599,11 @@
       ! Compute zqsn and increment new energy.
       !-----------------------------------------------------------------
                zqsn(k) = -rhos * (Lfresh - cp_ice*zTsn(k))
+                
+               if(ismyturn()) then
+                  write(*,*), 'zqsn', niter, k, zqsn(k)
+               endif 
+
                enew  = enew + hslyr * zqsn(k)
 
                Tsn_start(k) = zTsn(k) ! for next iteration
@@ -660,6 +669,10 @@
                else
                   zqin(k) = -rhoi * (-cp_ice*zTin(k) + Lfresh)
                endif
+               if(ismyturn()) then
+                  write(*,*), 'zqin', niter, k, zqin(k)
+                  write(*,*), 'dqmat', niter, k, dqmat(k)
+               endif 
                enew = enew + hilyr * zqin(k)
                einex = einex + hilyr * dqmat(k)
 

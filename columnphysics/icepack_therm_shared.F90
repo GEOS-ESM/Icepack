@@ -563,8 +563,8 @@
 
          logical(kind=log_kind) :: ret
 
-         ret = (local_tsk == 38 .and. local_i == 5 .and. &
-                local_j == 53 .and. local_blk == 1)
+         ret = (local_tsk == 89 .and. local_i == 18 .and. &
+                local_j == 81 .and. local_blk == 1)
 
       end function ismyturn
 #endif

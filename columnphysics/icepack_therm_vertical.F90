@@ -822,6 +822,10 @@
       hilyr    = hin / real(nilyr,kind=dbl_kind)
       hslyr    = hsn / rnslyr
 
+      if(ismyturn()) then
+          write(*,*), 'init, hilyr, hslyr', hilyr, hslyr
+      endif 
+
       !-----------------------------------------------------------------
       ! Snow enthalpy and maximum allowed snow temperature
       !-----------------------------------------------------------------
@@ -930,6 +934,10 @@
       !-----------------------------------------------------------------
       ! initial energy per unit area of ice/snow, relative to 0 C
       !-----------------------------------------------------------------
+         if(ismyturn()) then
+           write(*,*), 'zqsn', k, zqsn(k)
+         endif 
+
          einit = einit + hslyr*zqsn(k)
 
       enddo                     ! nslyr
@@ -1064,6 +1072,9 @@
       !-----------------------------------------------------------------
       ! initial energy per unit area of ice/snow, relative to 0 C
       !-----------------------------------------------------------------
+         if(ismyturn()) then
+           write(*,*), 'zqin', k, zqin(k)
+         endif 
 
          einit = einit + hilyr*zqin(k)
 
