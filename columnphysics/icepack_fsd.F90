@@ -42,6 +42,8 @@
 
       module icepack_fsd
 
+#define COUPLE_CICE6_AND_WAVES___disable
+
       use icepack_kinds
       use icepack_parameters, only: c0, c1, c2, c4, p01, p1, p5, puny
       use icepack_parameters, only: pi, floeshape, wave_spec, bignum, gravit, rhoi
@@ -747,7 +749,18 @@
             if (SUM(afsdn_latg(:,n)) > puny) then ! fsd exists
 
                if (wave_spec) then
+#if defined (COUPLE_CICE6_AND_WAVES)
+!                  print *, 'DBG:'//trim(subname), ' wave_spec=True' 
+!
+!                  print *, 'DBG:'//trim(subname), ' dwavefreq = ', maxval(dwavefreq)
+!                  print *, 'DBG:'//trim(subname), ' wave_spectrum = ', maxval(wave_spectrum)
+!                  print *, 'DBG:'//trim(subname), ' wave_sig_ht = ', wave_sig_ht
+#endif
                   if (wave_sig_ht > puny) then
+
+#if defined (COUPLE_CICE6_AND_WAVES)
+!                    print *, 'DBG:'//trim(subname), ' new frazil ice: call wave_dep_growth(...,waves,...)'
+#endif
                      call wave_dep_growth (nfsd, wave_spectrum, &
                                            wavefreq, dwavefreq, &
                                            new_size)
@@ -776,6 +789,9 @@
 
                if (wave_spec) then
                   if (wave_sig_ht > puny) then
+#if defined (COUPLE_CICE6_AND_WAVES)
+                     print *, 'DBG:'//trim(subname), ' entirely new ice: call wave_dep_growth(...,waves,...)'
+#endif
                      call wave_dep_growth (nfsd, wave_spectrum, &
                                            wavefreq, dwavefreq, &
                                            new_size)

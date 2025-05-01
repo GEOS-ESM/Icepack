@@ -19,6 +19,8 @@
 !
       module icepack_therm_itd
 
+#define COUPLE_CICE6_AND_WAVES__disable
+
       use icepack_kinds
       use icepack_parameters, only: c0, c1, c2, c3, c4, c6, c10
       use icepack_parameters, only: p001, p1, p333, p5, p666, puny, bignum
@@ -1841,6 +1843,13 @@
 
          if (tr_fsd) then ! evolve the floe size distribution
             ! both new frazil ice and lateral growth
+#if defined (COUPLE_CICE6_AND_WAVES)
+            print *, 'DBG:'//trim(subname), 'call fsd_add_new_ice(..., waves, ...)'
+
+!            print *, 'DBG:'//trim(subname), ' dwavefreq = ', maxval(dwavefreq)
+!            print *, 'DBG:'//trim(subname), ' wave_spectrum = ', maxval(wave_spectrum)
+!            print *, 'DBG:'//trim(subname), ' wave_sig_ht = ', wave_sig_ht
+#endif
             call fsd_add_new_ice (ncat, n,    nfsd,          &
                                   dt,         ai0new,        &
                                   d_an_latg,  d_an_newi,     &

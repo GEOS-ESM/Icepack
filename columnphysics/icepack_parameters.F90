@@ -6,6 +6,8 @@
 
       module icepack_parameters
 
+#define COUPLE_CICE6_AND_WAVES
+
       use icepack_kinds
       use icepack_warnings, only: icepack_warnings_aborted, &
           icepack_warnings_add, icepack_warnings_setabort
@@ -306,8 +308,11 @@
 !-----------------------------------------------------------------------
 
       integer (kind=int_kind), public :: &
+#if defined (COUPLE_CICE6_AND_WAVES)
+         nfreq = 37                   ! number of frequencies
+#else
          nfreq = 25                   ! number of frequencies
-
+#endif
       real (kind=dbl_kind), public :: &
          floeshape = 0.66_dbl_kind    ! constant from Steele (unitless)
 

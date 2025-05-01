@@ -28,6 +28,8 @@
 !
       module icepack_wavefracspec
 
+#define COUPLE_CICE6_AND_WAVES___disable
+
       use icepack_kinds
       use icepack_parameters, only: p01, p5, c0, c1, c2, c3, c4, c10
       use icepack_parameters, only: bignum, puny, gravit, pi
@@ -259,14 +261,30 @@
       d_afsdn_wave   (:,:) = c0
       fracture_hist  (:)   = c0
 
+
+#if defined (COUPLE_CICE6_AND_WAVES)
+!     print *, 'DBG:'//trim(subname), ' compute = ', (.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny))
+#endif
+
+
       ! if all ice is not in first floe size category
       if (.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)) then
 
+#if defined (COUPLE_CICE6_AND_WAVES)
+!      print *, 'DBG:'//trim(subname), ' fracture = ', &
+!               ((aice > p01).and.(MAXVAL(wave_spectrum(:)) > puny)), &
+!               (MAXVAL(wave_spectrum(:)) > puny), &
+!               aice 
+#endif
 
       ! do not try to fracture for minimal ice concentration or zero wave spectrum
       if ((aice > p01).and.(MAXVAL(wave_spectrum(:)) > puny)) then
 
          hbar = vice / aice
+
+#if defined (COUPLE_CICE6_AND_WAVES)
+         print *, 'DBG:'//trim(subname), ' call wave_frac(..., waves, ...) ', maxval(wave_spectrum)
+#endif
 
          ! calculate fracture histogram
          call wave_frac(nfsd, nfreq, wave_spec_type, &
@@ -275,6 +293,11 @@
                         hbar, wave_spectrum, fracture_hist)
 
          if (icepack_warnings_aborted(subname)) return
+
+#if defined (COUPLE_CICE6_AND_WAVES)
+         print *, 'DBG:'//trim(subname), ' progress = ', (MAXVAL(fracture_hist) > puny)
+#endif
+
 
          ! if fracture occurs
          if (MAXVAL(fracture_hist) > puny) then
@@ -307,12 +330,19 @@
                   nsubt = 0
                   DO WHILE (elapsed_t < dt)
                      nsubt = nsubt + 1
+#if defined (COUPLE_CICE6_AND_WAVES)
+!                    print *, 'DBG:'//trim(subname), ' exit  = ', afsd_tmp(1).ge.c1-puny 
+#endif
 
                      ! if all floes in smallest category already, exit
                      if (afsd_tmp(1).ge.c1-puny) EXIT
 
                      ! calculate d_afsd using current afstd
                      d_afsd_tmp = get_dafsd_wave(nfsd, afsd_tmp, fracture_hist, frac)
+
+#if defined (COUPLE_CICE6_AND_WAVES)
+!                    print *, 'DBG:'//trim(subname), ' d_afsd_tmp = ', minval(d_afsd_tmp), maxval(d_afsd_tmp)
+#endif
 
                      ! check in case wave fracture struggles to converge
                      if (nsubt>100) then
@@ -379,6 +409,12 @@
 
       endif          ! aice > p01
       endif         ! all small floes
+
+#if defined (COUPLE_CICE6_AND_WAVES)
+     if (any(abs(d_afsd_wave) > 0.0)) then
+         print *, 'DBG:'//trim(subname), ' d_afsd_wave = ', minval(d_afsd_wave), maxval(d_afsd_wave)
+     endif
+#endif
 
       end subroutine icepack_step_wavefracture
 

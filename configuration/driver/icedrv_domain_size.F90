@@ -6,6 +6,8 @@
 
       module icedrv_domain_size
 
+#define COUPLE_CICE6_AND_WAVES
+
       use icedrv_kinds
 
 !=======================================================================
@@ -28,7 +30,11 @@
         n_don     = TRDON     , & ! number of DON pools in use
         n_fed     = TRFED     , & ! number of Fe  pools in use dissolved Fe
         n_fep     = TRFEP     , & ! number of Fe  pools in use particulate Fe
+#if defined (COUPLE_CICE6_AND_WAVES)
+        nfreq     = 37        , & ! number of wave frequencies ! HARDWIRED FOR NOW
+#else
         nfreq     = 25        , & ! number of wave frequencies ! HARDWIRED FOR NOW
+#endif
         nblyr     = NBGCLYR   , & ! number of bio/brine layers per category
                                   ! maximum number of biology tracers + aerosols
                                   ! *** add to kscavz in icepack_zbgc_shared.F90
