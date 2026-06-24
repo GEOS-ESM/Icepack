@@ -4158,6 +4158,10 @@
                           fswthrun_vdf=fswthrun_vdf,    &
                           fswthrun_idr=fswthrun_idr,    &
                           fswthrun_idf=fswthrun_idf,    &
+                          fswthrun_uvrdr=l_fswthrun_uvrdr,&
+                          fswthrun_uvrdf=l_fswthrun_uvrdf,&
+                          fswthrun_pardr=l_fswthrun_pardr,&
+                          fswthrun_pardf=l_fswthrun_pardf,&
                           fswpenln=fswpenln,            &
                           Sswabsn=Sswabsn,              &
                           Iswabsn=Iswabsn,              &
